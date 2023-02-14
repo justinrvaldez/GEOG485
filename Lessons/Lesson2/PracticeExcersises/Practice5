@@ -1,0 +1,29 @@
+import arcpy
+
+def Model():  # Model
+    try:
+        # To allow overwriting outputs change overwriteOutput option to True.
+        arcpy.env.overwriteOutput = True
+        arcpy.env.workspace = r'C:\Users\justi\GIS\GEOG 485\Lesson 2\Practice Excercises\Practice 4\Lesson2PracticeExercise\USA.gdb'
+        Iowa = r'C:\Users\justi\GIS\GEOG 485\Lesson 2\Practice Excercises\Practice 4\Lesson2PracticeExercise\Iowa.gdb\Iowa'
+        gdb_path = r'C:\Users\justi\GIS\GEOG 485\Lesson 2\Practice Excercises\Practice 4\Lesson2PracticeExercise\USA.gdb'
+        feature_class = arcpy.ListFeatureClasses()
+
+        for fc in feature_class:
+
+            file_path = gdb_path + '\\' + fc
+
+            # Process: Clip (Clip) (analysis)
+            clipped_feature = "C:\\Users\\justi\\GIS\\Main.gdb\\" + fc + '_clip'
+            arcpy.analysis.Clip(in_features=file_path, clip_features=Iowa, out_feature_class=clipped_feature, cluster_tolerance="")
+
+    except arcpy.ExecuteError:
+        # Report if there was an error
+        arcpy.AddError("Could not clip feature classes")
+        print("Could not clip feature classes")
+        print(arcpy.GetMessages())
+
+if __name__ == '__main__':
+    # Global Environment settings
+    with arcpy.EnvManager(scratchWorkspace=r"C:\Users\justi\GIS\Main.gdb", workspace=r"C:\Users\justi\GIS\Main.gdb"):
+        Model()
